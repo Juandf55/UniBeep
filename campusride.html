@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusRide - Comparte tu trayecto</title>
+    
+    <!-- Vincular CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Floating Navbar */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 26, 26, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+             padding: 12px 40px;
+            border: 1px solid #333;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+             width: auto;
+             max-width: calc(100vw - 40px); /* Cambiado para dejar margen */
+        }
+.nav-links li:last-child {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0; /* Evita que se compriman */
+    margin-right: 0; /* Asegura que no tenga margen extra */
+}
+/* Añade esto para dar espacio interno al último botón */
+.nav-links li:last-child .btn:last-child {
+    margin-right: 0;
+}
+.btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .nav-center {
+            display: auto;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Section Styling */
+        .section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .section h1 {
+            font-size: 6rem;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: -2px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .section-info {
+            font-size: 1.1rem;
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Individual Section Colors */
+        #home {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        #about {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        #services {
+            background: linear-gradient(135deg, #0a0a0a 0%, #2a2a2a 100%);
+        }
+
+        #portfolio {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        }
+
+        #contact {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        /* Footer */
+        .footer {
+            background: transparent;
+            padding: 60px 20px 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-container {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #999;
+            text-decoration: none;
+            margin-bottom: 8px;
+            display: block;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .footer-section a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                top: 15px;
+                padding: 10px 20px;
+                width: calc(100% - 30px);
+                max-width: 500px;
+            }
+
+            .nav-container {
+                justify-content: space-between;
+                gap: 0;
+            }
+
+            .nav-center {
+                gap: 20px;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(26, 26, 26, 0.95);
+                flex-direction: column;
+                padding: 20px;
+                border-radius: 15px;
+                margin-top: 10px;
+                gap: 15px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .mobile-auth-buttons {
+                display: flex !important;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .mobile-auth-buttons .auth-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .mobile-auth-buttons .auth-btn.signup-btn {
+                background: #ffffff;
+                color: #000000;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .section h1 {
+                font-size: 3.5rem;
+                padding: 0 20px;
+            }
+
+            .footer-container {
+                margin: 0 10px;
+                padding: 30px 20px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section h1 {
+                font-size: 2.5rem;
+            }
+
+            .navbar {
+                padding: 8px 15px;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Smooth scroll enhancement */
+        @media (prefers-reduced-motion: no-preference) {
+            html {
+                scroll-behavior: smooth;
+            }
+        }
+        
+        /* AROS REDUCIDOS A LA MITAD */
+        .paces {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            position: relative;
+            padding: 50%; /* REDUCIDO de 100% a 50% */
+            width: 300px; /* REDUCIDO de 600px a 300px */
+            max-width: 90vw;
+        }
+        .pace {
+            font-size: 90%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            padding: 0.5em;
+            text-align: center;
+            border: 1px solid #fff;
+            border-radius: 60%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all ease-in-out 0.2s;
+        }
+        .pace .quote {
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+        }
+        .pace:hover,
+        .pace:focus,
+        .pace:active {
+            cursor: grabbing;
+            background-color: #111;
+            color: #111;
+            animation: none !important;
+        }
+        .pace:hover .quote,
+        .pace:focus .quote,
+        .pace:active .quote {
+            color: #fff;
+            hyphens: auto;
+            z-index: 100;
+            opacity: 1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .pace.js {
+            margin: 5%;
+            animation: 2.5s infinite linear rotate;
+            box-shadow: 0 0 5em #fff;
+        }
+        .pace.css {
+            margin: 10%;
+            animation: 5s infinite linear rotate;
+        }
+        .pace.html {
+            margin: 15%;
+            animation: 10s infinite linear rotate;
+        }
+        .pace.url {
+            margin: 20%;
+            animation: 15s infinite linear rotate;
+        }
+        .pace.http {
+            margin: 25%;
+            animation: 25s infinite linear rotate;
+        }
+        .pace.tcpip {
+            margin: 30%;
+            animation: 35s infinite linear rotate;
+        }
+        .quote.js {
+            padding: 10%;
+        }
+        .quote.css {
+            padding: 5%;
+        }
+        .quote.html {
+            padding: 4%;
+        }
+        .quotes .quote {
+            opacity: 0;
+        }
+        .quotes .quote:target {
+            position: absolute;
+            top: 0;
+            opacity: 1;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Main container */
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+            gap: 1em;
+            flex-wrap: wrap;
+            overflow: auto;
+            padding: 2em;
+        }
+
+        /* SVG positioning */
+        .svg-container {
+            position: absolute;
+        }
+
+        /* Card container */
+        .card-container {
+            padding: 2px;
+            border-radius: 1.5em;
+            position: relative;
+            background: linear-gradient(
+                -30deg,
+                var(--gradient-color),
+                transparent,
+                var(--gradient-color)
+            ),
+            linear-gradient(
+                to bottom,
+                var(--color-neutral-900),
+                var(--color-neutral-900)
+            );
+        }
+        
+        .card-container.card-arrow  {
+            --f: url(#filter-arrow);
+            --electric-border-color: #171879;
+            --electric-light-color: oklch(from var(--electric-border-color) l c h);
+            --gradient-color: oklch(
+                from var(--electric-border-color) 0.3 calc(c / 2) h / 0.4
+            );
+        }
+        .card-container.card-art {
+            --f: url(#filter-art);
+            --electric-border-color: rgb(255, 255, 255);
+            --electric-light-color: oklch(from var(--electric-border-color) l c h);
+            --gradient-color: oklch(
+                from var(--electric-border-color) 0.3 calc(c / 2) h / 0.4
+            );
+        }
+        .card-container.card-lightbulb {
+            --f: url(#filter-lightbulb);
+            --electric-border-color: rgb(6, 47, 230);
+            --electric-light-color: oklch(from var(--electric-border-color) l c h);
+            --gradient-color: oklch(
+                from var(--electric-border-color) 0.3 calc(c / 2) h / 0.4
+            );
+            order: -1;
+        }
+
+        /* Inner container */
+        .inner-container {
+            position: relative;
+        }
+
+        /* Border layers */
+        .border-outer {
+            border: 2px solid oklch(from var(--electric-border-color) l c h / 0.5);
+            border-radius: 1.5em;
+            padding-right: .15em;
+            padding-bottom: .15em;
+        }
+
+        .main-card {
+            width: 22rem;
+            aspect-ratio: 7 / 10;
+            border-radius: 1.5em;
+            border: 2px solid var(--electric-border-color);
+            margin-top: -4px;
+            margin-left: -4px;
+            filter: var(--f);
+        }
+
+        /* Glow effects */
+        .glow-layer-1 {
+            border: 2px solid oklch(from var(--electric-border-color) l c h / 0.6);
+            border-radius: 24px;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            filter: blur(1px);
+        }
+
+        .glow-layer-2 {
+            border: 2px solid var(--electric-light-color);
+            border-radius: 24px;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            filter: blur(4px);
+        }
+
+        /* Overlay effects */
+        .overlay-1 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px;
+            opacity: 1;
+            mix-blend-mode: overlay;
+            transform: scale(1.1);
+            filter: blur(16px);
+            background: linear-gradient(
+                -30deg,
+                rgb(0, 101, 196),
+                transparent 30%,
+                transparent 70%,
+                rgb(0, 76, 218)
+            );
+        }
+
+        .overlay-2 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px;
+            opacity: 0.5;
+            mix-blend-mode: overlay;
+            transform: scale(1.1);
+            filter: blur(16px);
+            background: linear-gradient(
+                -30deg,
+                rgb(8, 21, 143),
+                transparent 30%,
+                transparent 70%,
+                rgb(43, 7, 173)
+            );
+        }
+
+        /* Background glow */
+        .background-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px;
+            filter: blur(32px);
+            transform: scale(1.1);
+            opacity: 0.3;
+            z-index: -1;
+            background: linear-gradient(
+                -30deg,
+                var(--electric-light-color),
+                transparent,
+                var(--electric-border-color)
+            );
+        }
+
+        /* Content container */
+        .content-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Content sections */
+        .content-top {
+            display: flex;
+            flex-direction: column;
+            padding: 48px;
+            padding-bottom: 16px;
+            height: 100%;
+        }
+
+        .content-bottom {
+            display: flex;
+            flex-direction: column;
+            padding: 48px;
+            padding-top: 16px;
+        }
+
+        /* Scrollbar glass component */
+        .scrollbar-glass {
+            background: radial-gradient(
+                47.2% 50% at 50.39% 88.37%,
+                rgba(255, 255, 255, 0.12) 0%,
+                rgba(255, 255, 255, 0) 100%
+            ),
+            rgba(255, 255, 255, 0.04);
+            position: relative;
+            transition: background 0.3s ease;
+            border-radius: 14px;
+            width: fit-content;
+            height: fit-content;
+            padding: .5em 1em;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: .85em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .scrollbar-glass:hover {
+            background: radial-gradient(
+                47.2% 50% at 50.39% 88.37%,
+                rgba(255, 255, 255, 0.12) 0%,
+                rgba(255, 255, 255, 0) 100%
+            ),
+            rgba(255, 255, 255, 0.08);
+        }
+
+        .scrollbar-glass::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 1px;
+            background: linear-gradient(
+                150deg,
+                rgba(255, 255, 255, 0.48) 16.73%,
+                rgba(255, 255, 255, 0.08) 30.2%,
+                rgba(255, 255, 255, 0.08) 68.2%,
+                rgba(255, 255, 255, 0.6) 81.89%
+            );
+            border-radius: inherit;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask-composite: xor;
+            pointer-events: none;
+        }
+
+        /* Typography */
+        .title {
+            font-size: 2.25em;
+            font-weight: 500;
+            margin-top: auto;
+        }
+
+        .description {
+            opacity: 0.5;
+        }
+
+        /* Divider */
+        .divider {
+            margin-top: auto;
+            border: none;
+            height: 1px;
+            background-color: currentColor;
+            opacity: 0.1;
+            mask-image: linear-gradient(to right, transparent, black, transparent);
+            -webkit-mask-image: linear-gradient(
+                to right,
+                transparent,
+                black,
+                transparent
+            );
+        }
+
+         /* ===== BOTONES ESTILO 3D ===== */
+    
+        .button {
+             padding: auto;
+            all: unset;
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            position: relative;
+            border-radius: 100em;
+            background-color: rgba(0, 0, 0, 0.75);
+            box-shadow:
+                -0.15em -0.15em 0.15em -0.075em rgba(5, 5, 5, 0.25),
+                0.0375em 0.0375em 0.0675em 0 rgba(5, 5, 5, 0.1);
+        }
+
+        .button::after {
+            content: "";
+            position: absolute;
+            z-index: 0;
+            width: calc(100% + 0.3em);
+            height: calc(100% + 0.3em);
+            top: -0.15em;
+            left: -0.15em;
+            border-radius: inherit;
+            background: linear-gradient(
+                -135deg,
+                rgba(5, 5, 5, 0.5),
+                transparent 20%,
+                transparent 100%
+            );
+            filter: blur(0.0125em);
+            opacity: 0.25;
+            mix-blend-mode: multiply;
+        }
+
+        .button .button-outer {
+            position: relative;
+            z-index: 1;
+            border-radius: inherit;
+            transition: box-shadow 300ms ease;
+            will-change: box-shadow;
+            box-shadow:
+                0 0.05em 0.05em -0.01em rgba(5, 5, 5, 1),
+                0 0.01em 0.01em -0.01em rgba(5, 5, 5, 0.5),
+                0.15em 0.3em 0.1em -0.01em rgba(5, 5, 5, 0.25);
+        }
+
+        .button:hover .button-outer {
+            box-shadow:
+                0 0 0 0 rgba(5, 5, 5, 1),
+                0 0 0 0 rgba(5, 5, 5, 0.5),
+                0 0 0 0 rgba(5, 5, 5, 0.25);
+        }
+
+        .button-inner {
+            position: relative;
+            z-index: 1;
+            border-radius: inherit;
+            padding: 0.6em 1.2em;
+            background-image: linear-gradient(135deg, #e74c3c, #c0392b);
+            transition:
+                box-shadow 300ms ease,
+                clip-path 250ms ease,
+                background-image 250ms ease,
+                transform 250ms ease;
+            will-change: box-shadow, clip-path, background-image, transform;
+            overflow: clip;
+            clip-path: inset(0 0 0 0 round 100em);
+            box-shadow:
+                0 0 0 0 inset rgba(5, 5, 5, 0.1),
+                -0.05em -0.05em 0.05em 0 inset rgba(5, 5, 5, 0.25),
+                0 0 0 0 inset rgba(5, 5, 5, 0.1),
+                0 0 0.05em 0.2em inset rgba(255, 255, 255, 0.25),
+                0.025em 0.05em 0.1em 0 inset rgba(255, 255, 255, 1),
+                0.12em 0.12em 0.12em inset rgba(255, 255, 255, 0.25),
+                -0.075em -0.25em 0.25em 0.1em inset rgba(5, 5, 5, 0.25);
+        }
+
+        .button:hover .button-inner {
+            clip-path: inset(
+                clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px)
+                clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px) round 100em
+            );
+            box-shadow:
+                0.1em 0.15em 0.05em 0 inset rgba(5, 5, 5, 0.75),
+                -0.025em -0.03em 0.05em 0.025em inset rgba(5, 5, 5, 0.5),
+                0.25em 0.25em 0.2em 0 inset rgba(5, 5, 5, 0.5),
+                0 0 0.05em 0.5em inset rgba(255, 255, 255, 0.15),
+                0 0 0 0 inset rgba(255, 255, 255, 1),
+                0.12em 0.12em 0.12em inset rgba(255, 255, 255, 0.25),
+                -0.075em -0.12em 0.2em 0.1em inset rgba(5, 5, 5, 0.25);
+        }
+
+        .button .button-inner span {
+            position: relative;
+            z-index: 4;
+            font-family: "Inter", sans-serif;
+            letter-spacing: -0.02em;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0);
+            background-image: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(240, 240, 240, 1));
+            -webkit-background-clip: text;
+            background-clip: text;
+            transition: transform 250ms ease;
+            display: block;
+            will-change: transform;
+            text-shadow: rgba(0, 0, 0, 0.1) 0 0 0.1em;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .button:hover .button-inner span {
+            transform: scale(0.975);
+        }
+
+        .button:active .button-inner {
+            transform: scale(0.975);
+        }
+
+        /* Botones de confirmación */
+        .btn {
+            all: unset;
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            position: relative;
+            border-radius: 100em;
+            background-color: rgba(0, 0, 0, 0.75);
+            box-shadow:
+                -0.15em -0.15em 0.15em -0.075em rgba(5, 5, 5, 0.25),
+                0.0375em 0.0375em 0.0675em 0 rgba(5, 5, 5, 0.1);
+            display: inline-block;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+
+        .btn::after {
+            content: "";
+            position: absolute;
+            z-index: 0;
+            width: calc(100% + 0.3em);
+            height: calc(100% + 0.3em);
+            top: -0.15em;
+            left: -0.15em;
+            border-radius: inherit;
+            background: linear-gradient(
+                -135deg,
+                rgba(5, 5, 5, 0.5),
+                transparent 20%,
+                transparent 100%
+            );
+            filter: blur(0.0125em);
+            opacity: 0.25;
+            mix-blend-mode: multiply;
+        }
+
+        .btn-outer {
+            position: relative;
+            z-index: 1;
+            border-radius: inherit;
+            transition: box-shadow 300ms ease;
+            will-change: box-shadow;
+            box-shadow:
+                0 0.05em 0.05em -0.01em rgba(5, 5, 5, 1),
+                0 0.01em 0.01em -0.01em rgba(5, 5, 5, 0.5),
+                0.15em 0.3em 0.1em -0.01em rgba(5, 5, 5, 0.25);
+        }
+
+        .btn:hover .btn-outer {
+            box-shadow:
+                0 0 0 0 rgba(5, 5, 5, 1),
+                0 0 0 0 rgba(5, 5, 5, 0.5),
+                0 0 0 0 rgba(5, 5, 5, 0.25);
+        }
+
+        .btn-inner {
+            position: relative;
+            z-index: 1;
+            border-radius: inherit;
+            padding: 0.8em 1.5em;
+            transition:
+                box-shadow 300ms ease,
+                clip-path 250ms ease,
+                transform 250ms ease;
+            will-change: box-shadow, clip-path, transform;
+            overflow: clip;
+            clip-path: inset(0 0 0 0 round 100em);
+            box-shadow:
+                0 0 0 0 inset rgba(5, 5, 5, 0.1),
+                -0.05em -0.05em 0.05em 0 inset rgba(5, 5, 5, 0.25),
+                0 0 0 0 inset rgba(5, 5, 5, 0.1),
+                0 0 0.05em 0.2em inset rgba(255, 255, 255, 0.25),
+                0.025em 0.05em 0.1em 0 inset rgba(255, 255, 255, 1),
+                0.12em 0.12em 0.12em inset rgba(255, 255, 255, 0.25),
+                -0.075em -0.25em 0.25em 0.1em inset rgba(5, 5, 5, 0.25);
+            font-weight: 600;
+            color: white;
+        }
+
+        .btn-danger .btn-inner {
+            background-image: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-secondary .btn-inner {
+            background-image: linear-gradient(135deg, #6c757d, #495057);
+        }
+
+        .btn:hover .btn-inner {
+            clip-path: inset(
+                clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px)
+                clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px) round 100em
+            );
+            box-shadow:
+                0.1em 0.15em 0.05em 0 inset rgba(5, 5, 5, 0.75),
+                -0.025em -0.03em 0.05em 0.025em inset rgba(5, 5, 5, 0.5),
+                0.25em 0.25em 0.2em 0 inset rgba(5, 5, 5, 0.5),
+                0 0 0.05em 0.5em inset rgba(255, 255, 255, 0.15),
+                0 0 0 0 inset rgba(255, 255, 255, 1),
+                0.12em 0.12em 0.12em inset rgba(255, 255, 255, 0.25),
+                -0.075em -0.12em 0.2em 0.1em inset rgba(5, 5, 5, 0.25);
+        }
+
+        .btn:active .btn-inner {
+            transform: scale(0.975);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+
+            .button-inner {
+                padding: 0.5em 0.8em;
+            }
+        }
+
+        .skill-card {
+    background-image: linear-gradient(135deg, #e3f2fd, #bbdefb) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.skill-card p {
+    color: #1565c0;
+    font-size: 1.15em;
+    font-weight: 500;
+    margin: 0;
+    text-align: center;
+}
+
+/* Ajustar el padding del message-inner para skill cards */
+.skill-card.message-inner {
+    padding: 2em;
+}
+
+/* Estilo para los botones dentro de skill cards */
+.skill-card .button {
+    margin-top: 5px;
+}
+
+/* Variante para botones de skills (azul) */
+.skill-card .button .button-inner {
+    background-image: linear-gradient(135deg, #5c9ce6, #4a8dd4);
+}
+
+.skill-card .button .button-inner span {
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(240, 240, 240, 1));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .skill-card p {
+        font-size: 1em;
+    }
+}
+    </style>
+</head>
+<body>
+    
+    <!-- Floating Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo"> CampusRide</a>
+            <div class="nav-center">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="active">Inicio</a></li>
+                    <li><a href="#about">Plataforma</a></li>
+                    <li><a href="#services">Funciones</a></li>
+                    <li><a href="#portfolio">Premium</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                    <li>
+                         <a href="login.html" class="btn btn-secondary">
+                                <div class="btn-outer">
+                                    <div class="btn-inner">
+                                        Log in
+                                    </div>
+                                </div>
+                            </a>
+                         <a href="signup.html" class="btn btn-secondary">
+                                <div class="btn-outer">
+                                    <div class="btn-inner">
+                                        Sign up
+                                    </div>
+                                </div>
+                            </a>
+                    </li>
+                </ul>
+            </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="section">
+        <div>
+            <h1>CampusRide</h1>
+            <p class="section-info">Conecta con estudiantes para compartir coche. Ahorra dinero, cuida el planeta y haz nuevos amigos en cada trayecto universitario</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div>
+            <h1>LA PLATAFORMA</h1>
+            <p class="section-info">Sistema seguro de conexión universitaria con verificación de identidad, geolocalización y chat integrado para coordinar viajes entre campus</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section">
+        <div>
+            <h1>FUNCIONES</h1>
+            <p class="section-info">Búsqueda por zona y horario, mensajería instantánea, publicación de trayectos y filtros inteligentes para encontrar tu compañero de viaje ideal</p>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="section">
+        <div>
+            <h1>PREMIUM</h1>
+            <p class="section-info">Acceso prioritario, compartir redes sociales, estadísticas de viajes y visibilidad destacada por solo €2.50/mes</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div>
+            <h1>CONTACTO</h1>
+            <p class="section-info">¿Tienes preguntas? Escríbenos a info@campusride.es o síguenos en redes sociales para estar al día de todas las novedades</p>
+        </div>
+    </section>
+
+    <!-- AROS CON CAPAS DE FUNCIONALIDAD -->
+    <ol reversed class="paces" lang="es">
+        <li class="pace js">Usuarios<blockquote class="quote js">Registro rápido con verificación universitaria. Solo estudiantes acceden a la plataforma para garantizar la seguridad de la comunidad</blockquote>
+        </li>
+        <li class="pace css">Chat<blockquote class="quote css">Sistema de mensajería interna segura para coordinar viajes. Conecta directamente con conductores y pasajeros sin compartir datos personales</blockquote></li>
+        <li class="pace html">Geolocalización<blockquote class="quote html">Encuentra compañeros cercanos con Google Maps. Filtra por zona de residencia, campus universitario y horarios compatibles con tu rutina</blockquote></li>
+        <li class="pace url">Premium<blockquote class="quote url">Funciones avanzadas: comparte Instagram/WhatsApp, visibilidad prioritaria en búsquedas y estadísticas detalladas de tus viajes compartidos</blockquote></li>
+        <li class="pace http">Seguridad<blockquote class="quote http">Encriptación de datos, cumplimiento RGPD, validación de correo universitario y límites anti-spam para proteger a todos los usuarios</blockquote></li>
+        <li class="pace tcpip">Comunidad<blockquote class="quote tcpip">Red estudiantil comprometida con la sostenibilidad, el ahorro compartido y la reducción de la huella de carbono en los campus</blockquote></li>	
+    </ol>
+
+    <svg class="svg-container">
+        <defs>
+            <filter id="filter-arrow" colorInterpolationFilters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="1" />
+                <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
+                    <animate attributeName="dy" values="700; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                </feOffset>
+
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="1" />
+                <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
+                    <animate attributeName="dy" values="0; -700" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                </feOffset>
+
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="2" />
+                <feOffset in="noise1" dx="0" dy="0" result="offsetNoise3">
+                    <animate attributeName="dx" values="490; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                </feOffset>
+
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="2" />
+                <feOffset in="noise2" dx="0" dy="0" result="offsetNoise4">
+                    <animate attributeName="dx" values="0; -490" dur="6s" repeatCount="indefinite" calcMode="linear" />
+                </feOffset>
+
+                <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" />
+                <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" />
+                <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
+
+                <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="30" xChannelSelector="R" yChannelSelector="B" />
+            </filter>
+            <filter id="filter-art" colorInterpolationFilters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="7" />
+                <feColorMatrix type="hueRotate" result="pt1" >
+                    <animate attributeName="values" values="0;360;" dur=".6s" repeatCount="indefinite" calcMode="paced" />
+                </feColorMatrix>
+                <feComposite />
+                <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="7" seed="5" />
+                <feColorMatrix type="hueRotate" result="pt2">
+                    <animate attributeName="values" values="0; 333; 199; 286; 64; 168; 256; 157; 360;" dur="5s" repeatCount="indefinite" calcMode="paced" />
+                </feColorMatrix>
+                <feBlend in="pt1" in2="pt2" mode="normal" result="combinedNoise" />
+
+                <feDisplacementMap in="SourceGraphic" scale="30" xChannelSelector="R" yChannelSelector="B" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- PANELES MEJORADOS PARA CAMPUSRIDE -->
+    <main class="main-container">
+        <div  class="card-container card-arrow">
+            <div class="inner-container">
+                <div class="border-outer">
+                    <div  class="main-card card-arrow"></div>
+                </div>
+                <div class="glow-layer-1"></div>
+                <div class="glow-layer-2"></div>
+            </div>
+
+            <div class="overlay-1"></div>
+            <div class="overlay-2"></div>
+            <div class="background-glow"></div>
+
+            <div class="content-container">
+                <div class="content-top">
+                    <div class="scrollbar-glass">
+                        Gratis
+                    </div>
+                    <p class="title">Plan Básico</p>
+                </div>
+
+                <hr class="divider" />
+
+                <div class="content-bottom">
+                    <p class="description">Acceso completo a búsqueda de viajes, chat interno, publicación de trayectos y verificación universitaria. Todo lo esencial para empezar a compartir coche.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-container card-art">
+            <div class="inner-container">
+                <div class="border-outer">
+                    <div class="main-card"></div>
+                </div>
+                <div class="glow-layer-1"></div>
+                <div class="glow-layer-2"></div>
+            </div>
+
+            <div class="overlay-1"></div>
+            <div class="overlay-2"></div>
+            <div class="background-glow"></div>
+
+            <div class="content-container">
+                <div class="content-top">
+                    <div class="scrollbar-glass">
+                        €2.50/mes
+                    </div>
+                    <p class="title">Premium</p>
+                </div>
+
+                <hr class="divider" />
+
+                <div class="content-bottom">
+                    <p class="description">Comparte tu Instagram y WhatsApp públicamente, aparece destacado en búsquedas, sin límite de chats activos y accede a estadísticas de tus viajes compartidos.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CampusRide</h3>
+                    <a href="#about">La Plataforma</a>
+                    <a href="#services">Funciones</a>
+                    <a href="#contact">Contacto</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <a href="#">Términos de Servicio</a>
+                    <a href="#">Política de Privacidad</a>
+                    <a href="#">Cumplimiento RGPD</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Soporte</h3>
+                    <a href="#">info@campusride.es</a>
+                    <a href="#">+34 XXX XXX XXX</a>
+                    <a href="#">Síguenos en Redes</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 CampusRide. Todos los derechos reservados. Hecho por estudiantes para estudiantes.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Vincular JavaScript -->
+    <script>
+        // Active navigation state management
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('.section');
+
+        // Function to update active nav link
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Listen for scroll events
+        window.addEventListener('scroll', updateActiveNav);
+
+        // Mobile menu toggle functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinksContainer = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinksContainer.classList.remove('active');
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuToggle.contains(e.target) && !navLinksContainer.contains(e.target)) {
+                navLinksContainer.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
