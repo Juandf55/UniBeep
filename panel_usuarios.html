@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Profile Carousel</title>
+  
+  <!-- GSAP Core -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- GSAP ScrollTrigger Plugin -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <!-- GSAP Draggable Plugin -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+  
+  <style>
+* {
+  box-sizing: border-box;
+}
+body {
+  background: #0a0a0a;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+.gallery {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.cards {
+  position: absolute;
+  width: 320px;
+  height: 450px;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  margin: 0;
+}
+
+.cards li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 320px;
+  height: 450px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Card container con efectos eléctricos */
+.card-container {
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+  border-radius: 1.5em;
+  position: relative;
+  background: linear-gradient(
+    -30deg,
+    oklch(from rgb(0, 64, 241) 0.3 calc(c / 2) h / 0.4),
+    transparent,
+    oklch(from rgb(0, 64, 241) 0.3 calc(c / 2) h / 0.4)
+  ),
+  linear-gradient(to bottom, #0a0a0a, #0a0a0a);
+}
+
+.inner-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.border-outer {
+  border: 2px solid rgba(0, 64, 241, 0.5);
+  border-radius: 1.5em;
+  padding-right: 0.15em;
+  padding-bottom: 0.15em;
+  width: 100%;
+  height: 100%;
+}
+
+.main-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 1.5em;
+  border: 2px solid rgb(0, 64, 241);
+  margin-top: -4px;
+  margin-left: -4px;
+  background: #0a0a0a;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glow layers */
+.glow-layer-1 {
+  border: 2px solid rgba(0, 64, 241, 0.6);
+  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+.glow-layer-2 {
+  border: 2px solid rgb(0, 140, 255);
+  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Overlay effects */
+.overlay-1 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  opacity: 1;
+  mix-blend-mode: overlay;
+  transform: scale(1.1);
+  filter: blur(16px);
+  background: linear-gradient(
+    -30deg,
+    rgb(0, 64, 241),
+    transparent 30%,
+    transparent 70%,
+    rgb(0, 76, 218)
+  );
+  pointer-events: none;
+}
+
+.overlay-2 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  transform: scale(1.1);
+  filter: blur(16px);
+  background: linear-gradient(
+    -30deg,
+    rgb(0, 64, 241),
+    transparent 30%,
+    transparent 70%,
+    rgb(0, 76, 218)
+  );
+  pointer-events: none;
+}
+
+.background-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  filter: blur(32px);
+  transform: scale(1.1);
+  opacity: 0.3;
+  z-index: -1;
+  background: linear-gradient(
+    -30deg,
+    rgb(0, 140, 255),
+    transparent,
+    rgb(0, 64, 241)
+  );
+  pointer-events: none;
+}
+
+/* Profile card content */
+.profile-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, rgb(0, 64, 241), rgb(0, 100, 255));
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 130px;
+  position: relative;
+}
+
+.profile-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.profile-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.profile-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  flex: 1;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.profile-location {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.profile-content {
+  flex: 1;
+  background: #0a0a0a;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-description {
+  color: #b0b0b0;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.profile-footer {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  border-top: 1px solid rgba(0, 64, 241, 0.3);
+}
+
+.social-link {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(0, 140, 255);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  background: radial-gradient(
+    47.2% 50% at 50.39% 88.37%,
+    rgba(0, 64, 241, 0.15) 0%,
+    rgba(0, 64, 241, 0) 100%
+  ),
+  rgba(0, 64, 241, 0.08);
+  border: 1px solid rgba(0, 140, 255, 0.3);
+  position: relative;
+}
+
+.social-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1px;
+  background: linear-gradient(
+    150deg,
+    rgba(0, 140, 255, 0.48) 16.73%,
+    rgba(0, 140, 255, 0.08) 30.2%,
+    rgba(0, 140, 255, 0.08) 68.2%,
+    rgba(0, 140, 255, 0.6) 81.89%
+  );
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.social-link:hover {
+  background: radial-gradient(
+    47.2% 50% at 50.39% 88.37%,
+    rgba(0, 64, 241, 0.25) 0%,
+    rgba(0, 64, 241, 0) 100%
+  ),
+  rgba(0, 64, 241, 0.15);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 140, 255, 0.4);
+}
+
+.social-link svg {
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.actions {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 1000;
+}
+
+.actions button {
+  all: unset;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  position: relative;
+  border-radius: 100em;
+  background-color: rgba(0, 0, 0, 0.75);
+  box-shadow:
+    -0.15em -0.15em 0.15em -0.075em rgba(5, 5, 5, 0.25),
+    0.0375em 0.0375em 0.0675em 0 rgba(5, 5, 5, 0.1);
+}
+
+.actions button::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: calc(100% + 0.3em);
+  height: calc(100% + 0.3em);
+  top: -0.15em;
+  left: -0.15em;
+  border-radius: inherit;
+  background: linear-gradient(
+    -135deg,
+    rgba(5, 5, 5, 0.5),
+    transparent 20%,
+    transparent 100%
+  );
+  filter: blur(0.0125em);
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+}
+
+.button-outer {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+  transition: box-shadow 300ms ease;
+  will-change: box-shadow;
+  box-shadow:
+    0 0.05em 0.05em -0.01em rgba(5, 5, 5, 1),
+    0 0.01em 0.01em -0.01em rgba(5, 5, 5, 0.5),
+    0.15em 0.3em 0.1em -0.01em rgba(5, 5, 5, 0.25);
+}
+
+.actions button:hover .button-outer {
+  box-shadow:
+    0 0 0 0 rgba(5, 5, 5, 1),
+    0 0 0 0 rgba(5, 5, 5, 0.5),
+    0 0 0 0 rgba(5, 5, 5, 0.25);
+}
+
+.button-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 0.8em 1.5em;
+  background-image: linear-gradient(135deg, rgb(0, 64, 241), rgb(0, 100, 255));
+  transition:
+    box-shadow 300ms ease,
+    clip-path 250ms ease,
+    transform 250ms ease;
+  will-change: box-shadow, clip-path, transform;
+  overflow: clip;
+  clip-path: inset(0 0 0 0 round 100em);
+  box-shadow:
+    0 0 0 0 inset rgba(5, 5, 5, 0.1),
+    -0.05em -0.05em 0.05em 0 inset rgba(5, 5, 5, 0.25),
+    0 0 0 0 inset rgba(5, 5, 5, 0.1),
+    0 0 0.05em 0.2em inset rgba(255, 255, 255, 0.25),
+    0.025em 0.05em 0.1em 0 inset rgba(255, 255, 255, 1),
+    0.12em 0.12em 0.12em inset rgba(255, 255, 255, 0.25),
+    -0.075em -0.25em 0.25em 0.1em inset rgba(5, 5, 5, 0.25);
+  font-weight: 700;
+  color: white;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actions button:hover .button-inner {
+  clip-path: inset(
+    clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px)
+    clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px) round 100em
+  );
+  box-shadow:
+    0.1em 0.15em 0.05em 0 inset rgba(5, 5, 5, 0.75),
+    -0.025em -0.03em 0.05em 0.025em inset rgba(5, 5, 5, 0.5),
+    0.25em 0.25em 0.2em 0 inset rgba(5, 5, 5, 0.5),
+    0 0 0.05em 0.5em inset rgba(255, 255, 255, 0.15),
+    0 0 0 0 inset rgba(255, 255, 255, 1),
+    0.12em 0.12em 0.12em inset rgba(255, 255, 255, 0.25),
+    -0.075em -0.12em 0.2em 0.1em inset rgba(5, 5, 5, 0.25);
+}
+
+.actions button:active .button-inner {
+  transform: scale(0.975);
+}
+
+.drag-proxy {
+  visibility: hidden;
+  position: absolute;
+}
+
+/* SVG Filters */
+.svg-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+  </style>
+</head>
+<body>
+<svg class="svg-filters">
+  <defs>
+    <filter id="filter-electric" colorInterpolationFilters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="8" result="noise1" seed="1" />
+      <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
+        <animate attributeName="dy" values="500; 0" dur="5s" repeatCount="indefinite" calcMode="linear" />
+      </feOffset>
+      <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="8" result="noise2" seed="2" />
+      <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
+        <animate attributeName="dy" values="0; -500" dur="5s" repeatCount="indefinite" calcMode="linear" />
+      </feOffset>
+      <feComposite in="offsetNoise1" in2="offsetNoise2" result="combinedNoise" />
+      <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="15" xChannelSelector="R" yChannelSelector="B" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="gallery">
+	<ul class="cards">
+		<li>
+      <div class="card-container">
+        <div class="inner-container">
+          <div class="border-outer">
+            <div class="main-card">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="profile-photo">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="Profile">
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">Ana García</h2>
+                    <p class="profile-location">📍 Barcelona, España</p>
+                  </div>
+                </div>
+                <div class="profile-content">
+                  <p class="profile-description">viaje a universidad... desde ...</p>
+                </div>
+                <div class="profile-footer">
+                  <a href="https://twitter.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                  </a>
+                  <a href="https://instagram.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://facebook.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                  </a>
+                  <a href="https://linkedin.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glow-layer-1"></div>
+          <div class="glow-layer-2"></div>
+        </div>
+        <div class="overlay-1"></div>
+        <div class="overlay-2"></div>
+        <div class="background-glow"></div>
+      </div>
+    </li>
+    
+    <li>
+      <div class="card-container">
+        <div class="inner-container">
+          <div class="border-outer">
+            <div class="main-card">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="profile-photo">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Profile">
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">Carlos Ruiz</h2>
+                    <p class="profile-location">📍 Madrid, España</p>
+                  </div>
+                </div>
+                <div class="profile-content">
+                  <p class="profile-description">viaje a universidad... desde ...</p>
+                </div>
+                <div class="profile-footer">
+                  <a href="https://twitter.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                  </a>
+                  <a href="https://instagram.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://facebook.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                  </a>
+                  <a href="https://linkedin.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glow-layer-1"></div>
+          <div class="glow-layer-2"></div>
+        </div>
+        <div class="overlay-1"></div>
+        <div class="overlay-2"></div>
+        <div class="background-glow"></div>
+      </div>
+    </li>
+    
+    <li>
+      <div class="card-container">
+        <div class="inner-container">
+          <div class="border-outer">
+            <div class="main-card">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="profile-photo">
+                    <!-- Sin foto -->
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">María López</h2>
+                    <p class="profile-location">📍 Valencia, España</p>
+                  </div>
+                </div>
+                <div class="profile-content">
+                  <p class="profile-description">viaje a universidad... desde ...</p>
+                </div>
+                <div class="profile-footer">
+                  <a href="https://twitter.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                  </a>
+                  <a href="https://instagram.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://facebook.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                  </a>
+                  <a href="https://linkedin.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glow-layer-1"></div>
+          <div class="glow-layer-2"></div>
+        </div>
+        <div class="overlay-1"></div>
+        <div class="overlay-2"></div>
+        <div class="background-glow"></div>
+      </div>
+    </li>
+    
+    <li>
+      <div class="card-container">
+        <div class="inner-container">
+          <div class="border-outer">
+            <div class="main-card">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="profile-photo">
+                    <img src="https://i.pravatar.cc/150?img=33" alt="Profile">
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">David Martín</h2>
+                    <p class="profile-location">📍 Sevilla, España</p>
+                  </div>
+                </div>
+                <div class="profile-content">
+                  <p class="profile-description">viaje a universidad... desde ...</p>
+                </div>
+                <div class="profile-footer">
+                  <a href="https://twitter.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                  </a>
+                  <a href="https://instagram.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://facebook.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                  </a>
+                  <a href="https://linkedin.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glow-layer-1"></div>
+          <div class="glow-layer-2"></div>
+        </div>
+        <div class="overlay-1"></div>
+        <div class="overlay-2"></div>
+        <div class="background-glow"></div>
+      </div>
+    </li>
+    
+    <li>
+      <div class="card-container">
+        <div class="inner-container">
+          <div class="border-outer">
+            <div class="main-card">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="profile-photo">
+                    <img src="https://i.pravatar.cc/150?img=45" alt="Profile">
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">Laura Sánchez</h2>
+                    <p class="profile-location">📍 Bilbao, España</p>
+                  </div>
+                </div>
+                <div class="profile-content">
+                  <p class="profile-description">viaje a universidad... desde ...</p>
+                </div>
+                <div class="profile-footer">
+                  <a href="https://twitter.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                  </a>
+                  <a href="https://instagram.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://facebook.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                  </a>
+                  <a href="https://linkedin.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glow-layer-1"></div>
+          <div class="glow-layer-2"></div>
+        </div>
+        <div class="overlay-1"></div>
+        <div class="overlay-2"></div>
+        <div class="background-glow"></div>
+      </div>
+    </li>
+    
+    <li>
+      <div class="card-container">
+        <div class="inner-container">
+          <div class="border-outer">
+            <div class="main-card">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="profile-photo">
+                    <!-- Sin foto -->
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">Pablo Torres</h2>
+                    <p class="profile-location">📍 Zaragoza, España</p>
+                  </div>
+                </div>
+                <div class="profile-content">
+                  <p class="profile-description">viaje a universidad... desde ...</p>
+                </div>
+                <div class="profile-footer">
+                  <a href="https://twitter.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                  </a>
+                  <a href="https://instagram.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://facebook.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                  </a>
+                  <a href="https://linkedin.com" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glow-layer-1"></div>
+          <div class="glow-layer-2"></div>
+        </div>
+        <div class="overlay-1"></div>
+        <div class="overlay-2"></div>
+        <div class="background-glow"></div>
+      </div>
+    </li>
+	</ul>
+	<div class="actions">
+		<button>
+      <div class="button-outer">
+        <div class="button-inner">← Prev</div>
+      </div>
+    </button>
+		<button>
+      <div class="button-outer">
+        <div class="button-inner">Next →</div>
+      </div>
+    </button>
+	</div>
+</div>
+<div class="drag-proxy"></div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger, Draggable);
+
+let iteration = 0;
+
+gsap.set('.cards li', {xPercent: 400, opacity: 0, scale: 0});
+
+const spacing = 0.1,
+	snapTime = gsap.utils.snap(spacing),
+	cards = gsap.utils.toArray('.cards li'),
+	animateFunc = element => {
+		const tl = gsap.timeline();
+		tl.fromTo(element, {scale: 0, opacity: 0}, {scale: 1, opacity: 1, zIndex: 100, duration: 0.5, yoyo: true, repeat: 1, ease: "power1.in", immediateRender: false})
+		  .fromTo(element, {xPercent: 400}, {xPercent: -400, duration: 1, ease: "none", immediateRender: false}, 0);
+		return tl;
+	},
+	seamlessLoop = buildSeamlessLoop(cards, spacing, animateFunc),
+	playhead = {offset: 0},
+	wrapTime = gsap.utils.wrap(0, seamlessLoop.duration()),
+	scrub = gsap.to(playhead, {
+		offset: 0,
+		onUpdate() {
+			seamlessLoop.time(wrapTime(playhead.offset));
+		},
+		duration: 0.5,
+		ease: "power3",
+		paused: true
+	}),
+	trigger = ScrollTrigger.create({
+		start: 0,
+		onUpdate(self) {
+			let scroll = self.scroll();
+			if (scroll > self.end - 1) {
+				wrap(1, 2);
+			} else if (scroll < 1 && self.direction < 0) {
+				wrap(-1, self.end - 2);
+			} else {
+				scrub.vars.offset = (iteration + self.progress) * seamlessLoop.duration();
+				scrub.invalidate().restart();
+			}
+		},
+		end: "+=3000",
+		pin: ".gallery"
+	}),
+	progressToScroll = progress => gsap.utils.clamp(1, trigger.end - 1, gsap.utils.wrap(0, 1, progress) * trigger.end),
+	wrap = (iterationDelta, scrollTo) => {
+		iteration += iterationDelta;
+		trigger.scroll(scrollTo);
+		trigger.update();
+	};
+
+ScrollTrigger.addEventListener("scrollEnd", () => scrollToOffset(scrub.vars.offset));
+
+function scrollToOffset(offset) {
+	let snappedTime = snapTime(offset),
+		progress = (snappedTime - seamlessLoop.duration() * iteration) / seamlessLoop.duration(),
+		scroll = progressToScroll(progress);
+	if (progress >= 1 || progress < 0) {
+		return wrap(Math.floor(progress), scroll);
+	}
+	trigger.scroll(scroll);
+}
+
+const buttons = document.querySelectorAll(".actions button");
+buttons[0].addEventListener("click", () => scrollToOffset(scrub.vars.offset - spacing)); // Prev
+buttons[1].addEventListener("click", () => scrollToOffset(scrub.vars.offset + spacing)); // Next
+
+Draggable.create(".drag-proxy", {
+  type: "x",
+  trigger: ".cards",
+  onPress() {
+    this.startOffset = scrub.vars.offset;
+  },
+  onDrag() {
+    scrub.vars.offset = this.startOffset + (this.startX - this.x) * 0.001;
+    scrub.invalidate().restart();
+  },
+  onDragEnd() {
+    scrollToOffset(scrub.vars.offset);
+  }
+});
+
+function buildSeamlessLoop(items, spacing, animateFunc) {
+	let overlap = Math.ceil(1 / spacing),
+		startTime = items.length * spacing + 0.5,
+		loopTime = (items.length + overlap) * spacing + 1,
+		rawSequence = gsap.timeline({paused: true}),
+		seamlessLoop = gsap.timeline({
+			paused: true,
+			repeat: -1,
+			onRepeat() {
+				this._time === this._dur && (this._tTime += this._dur - 0.01);
+			}
+		}),
+		l = items.length + overlap * 2,
+		time, i, index;
+
+	for (i = 0; i < l; i++) {
+		index = i % items.length;
+		time = i * spacing;
+		rawSequence.add(animateFunc(items[index]), time);
+		i <= items.length && seamlessLoop.add("label" + i, time);
+	}
+
+	rawSequence.time(startTime);
+	seamlessLoop.to(rawSequence, {
+		time: loopTime,
+		duration: loopTime - startTime,
+		ease: "none"
+	}).fromTo(rawSequence, {time: overlap * spacing + 1}, {
+		time: startTime,
+		duration: startTime - (overlap * spacing + 1),
+		immediateRender: false,
+		ease: "none"
+	});
+	return seamlessLoop;
+}
+</script>
+
+</body>
+</html>
