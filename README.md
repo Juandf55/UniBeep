@@ -134,12 +134,6 @@ Quiero que el estilo de la web sea interactivo y con animaciones, que use estilo
 Por ahora los efectos y css y elementos html que he usado por ahora son extraidos de distintas páginas que ofrecen codigo fuente, como, por ejemplo https://freefrontend.com/, https://codepen.io/trending. De manera que basate en eso que llevo por ahora , pero si puedes hacer mejoras de animaciones etc no lo dudes) 
  
  
- 
- 
-
- 
-
- 
 
 Arquitectura Backend (Laravel) 
 
