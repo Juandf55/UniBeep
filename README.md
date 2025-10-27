@@ -1,4 +1,4 @@
-PROPUESTA TÉCNICA AMPLIADA: CampusRide – Plataforma de Conexión para Compartir Coche 
+PROPUESTA TÉCNICA AMPLIADA: UniBeep – Plataforma de Conexión para Compartir Coche 
 
  
 
@@ -19,8 +19,8 @@ Mapas: Google Maps API
 
 Hosting: Servidor compartido con SSL y dominio .es 
 
-Tiempo estimado: 6–8 semanas (gracias a agentes generativos) 
- Presupuesto: Solo dominio y hosting (~€50–100/año) 
+Tiempo estimado: 6–8 semanas gracias a agentes generativos 
+ Presupuesto: Solo dominio y hosting ~€50–100/año 
 
  
 
@@ -30,13 +30,13 @@ Fase 1: MVP (Semanas 1–3)
 
 Funcionalidades Base: 
 
-Registro/Login con email  
+Registro/Login con email, (tratar de evitar la posivilidad del que el usuario use multicuentas, por ejemplo pidiendo el numero de telefono) 
 
 Perfil editable (nombre, carrera, universidad, red social o teléfono opcional) 
 
 Publicar viajes:  horario, días, usuario 
 
-Búsqueda de viajes por ubicación y horario 
+Búsqueda de viajes por ubicación y horario, en una seccion de panel  
 
 Chat interno entre usuarios conectados 
 
@@ -57,9 +57,11 @@ Fase 2: Funcionalidades Avanzadas (Semanas 4–6)
 
 Filtro por zona de residencia y horario. 
 
-Integración con Google Maps API para mostrar resultados cercanos. 
+Integración con Google Maps API para mostrar resultados cercanos.(no forma parte del prototipo base, pero puede ser una implementación a futuro, si puedes implementarlo hazlo, no lo dudes) 
 
-Cada marcador del mapa muestra datos del usuario (nombre, universidad, redes/WhatsApp si es público). 
+Cada marcador del mapa muestra datos del usuario (nombre, universidad, redes/WhatsApp si es público).(no forma parte del prototipo base, pero puede ser una implementación a futuro, si puedes implementarlo hazlo, no lo dudes) 
+
+ 
 
 ✅ Chat Directo 
 
@@ -71,9 +73,9 @@ Protección contra spam (máx. 10 chats activos).
 
 ✅ Premium Access 
 
-Solo usuarios premium (€2,50/mes) pueden mostrar contacto personal (Instagram/teléfono) en resultados del panel. 
+Solo usuarios premium (€2,50/mes) pueden mostrar contacto personal (Instagram/teléfono) en resultados del panel ilimitadamente. 
 
-Los demás solo acceden al chat interno. 
+Los demás solo acceden al chat interno para acordar viajes. 
 
  
 
@@ -81,13 +83,9 @@ Fase 3: Monetización y Anunciantes (Semanas 7–8)
 
 ✅ Panel de Anunciantes 
 
-Empresas locales pueden publicar banners segmentados por universidad o zona. 
+Contacto con Empresas locales y publico banners segmentados por universidad o zona, en el respectivo apartado en la web. 
 
 Estadísticas de visualización y clics. 
-
-Sistema básico de facturación mensual automatizada. 
-
- 
 
 3. ANÁLISIS DE MERCADO Y COMPETENCIA (Fase de Análisis - SDLC) 
 
@@ -106,7 +104,7 @@ BlaBlaCar: generalista, no universitaria. No filtra por campus ni horarios acad�
 Amovens: orientado a empresas, menos social. 
 
 CompartirCoche.es: sin integración de chat ni mapas. 
- ➡️ CampusRide se diferencia por su enfoque local, académico y social (vinculado a campus). 
+ UniBeep se diferencia por su enfoque local, académico y social (vinculado a campus). 
 
 Análisis PESTEL resumido: 
 
@@ -126,6 +124,23 @@ Legal: cumplimiento de RGPD y verificación universitaria.
 
 4. DISEÑO DEL SISTEMA 
 
+Frontend: 
+
+ 
+(El trabajo que llevo por ahora es el panel principal [“index.html” ], donde esta la información de la web, además me gustaría que ahí estuviera también el panel de búsqueda de viajes[que es el archivo “panel_usuarios.html” ], y el panel de anuncios, para que la web no sea pasada de seguir y el usuario lo tenga nada más entrar. 
+ 
+Quiero que el estilo de la web sea interactivo y con animaciones, que use estilos inspirados en los de dora.ai que al escrolear y al interactuar con la pagina se muevan las cosas etc. 
+
+Por ahora los efectos y css y elementos html que he usado por ahora son extraidos de distintas páginas que ofrecen codigo fuente, como, por ejemplo https://freefrontend.com/, https://codepen.io/trending. De manera que basate en eso que llevo por ahora , pero si puedes hacer mejoras de animaciones etc no lo dudes) 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+
 Arquitectura Backend (Laravel) 
 
 app/ 
@@ -142,7 +157,7 @@ app/
 routes/ 
 ├── web.php 
 ├── api.php 
- 
+  
 
 Seguridad 
 
@@ -256,7 +271,8 @@ Escalable a universidades de toda España.
 
  
 
-Para el css, darle un ejmplo . https://codepen.io/zaidik/pen/RwrKdez 
-https://codepen.io/themrsami/pen/YPyWZBE 
  
+
+TENER EN CUENTA: 
  
+ESTO ES LA PROPUESTA TECNICA DEL PROYECTO QUE QUIERO QUE REALICES, DE NAERA QUE TE HE DEJADO ANOTACIONES ENTRE PARENTESIS Y EN CURSIVA, QUE ES DONDE ENFATICO EN COMO QUIERO QUE LO HAGAS EXACTAMENTE COMO MI DESAROYADOR QUE ERES 
