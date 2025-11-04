@@ -1,272 +1,113 @@
-PROPUESTA TÉCNICA AMPLIADA: UniBeep – Plataforma de Conexión para Compartir Coche 
+AQUI TIENES TODO PARA DESARROYAR LA APLICACION COMPLETA. QUIERO ADEMAS QUE SE ALOJE EN MI SERVIDOR AZURE, POR LO QUE HAZLO PARA MI SERVIDOR, NO PARA QUE FUNCIONE DESDE REPLIT, GRACIAS 
+TENER EN CUENTA,  
+ 
+¡¡IMPORTANTE!!: 
+ 
+ESTO ES LA PROPUESTA TECNICA DEL PROYECTO QUE QUIERO QUE REALICES, DE MAERA QUE TE HE DEJADO ANOTACIONES ENTRE PARENTESIS DOBLES Y EN CURSIVA, QUE ES DONDE ENFATIZO EN COMO QUIERO QUE LO HAGAS EXACTAMENTE COMO MI DESAROYADOR QUE ERES 
+ 
+PROPUESTA TÉCNICA AMPLIADA – UNIBEEP (Versión mejorada) 
+
+RESUMEN EJECUTIVO 
+Objetivo: Plataforma web/mobile-first para que estudiantes compartan coche entre campus, con verificación universitaria, búsqueda geolocalizada, chat y modelo freemium. 
+Valor añadido: Enfoque centrado en diseño de interfaz y experiencia de usuario, modelo de datos normalizado para evitar redundancias, arquitectura escalable de tres capas y estrategia de desarrollo ágil e incremental. 
 
  
 
-1. RESUMEN EJECUTIVO 
-
-Objetivo General: 
-Desarrollar una plataforma web que permita a los estudiantes conectar entre sí para compartir coche y reducir gastos, mediante una experiencia segura, social y geolocalizada. 
-
-Stack Tecnológico 
-
-Frontend: HTML5, CSS3, JavaScript ES6 
-
-Backend:  PHP  
-
-Base de datos: MySQL 
-
-Mapas: Google Maps API  
-
-Hosting: Servidor compartido con SSL y dominio .es 
-
-Tiempo estimado: 6–8 semanas gracias a agentes generativos 
- Presupuesto: Solo dominio y hosting ~€50–100/año 
+ALCANCE Y PFUNCIONALIDADES:  
 
  
 
-2. ALCANCE DEL PROYECTO 
+Registro y login (email con verificación; teléfono opcional para evitar multicuentas). 
 
-Fase 1: MVP (Semanas 1–3) 
+Perfil de usuario (nombre, universidad, carrera, foto/avatar). 
 
-Funcionalidades Base: 
+Publicar viaje (origen, destino, horario, días recurrentes, plazas disponibles). 
 
-Registro/Login con email, (tratar de evitar la posivilidad del que el usuario use multicuentas, por ejemplo pidiendo el numero de telefono) 
+Panel de búsqueda (lista filtrable por zona y horario). 
 
-Perfil editable (nombre, carrera, universidad, red social o teléfono opcional) 
+Chat interno básico entre usuarios. 
 
-Publicar viajes:  horario, días, usuario 
+Panel de administración simple(gestión de usuarios, viajes y anuncios)(Para el user admin). 
 
-Búsqueda de viajes por ubicación y horario, en una seccion de panel  
+Integración con Google Maps y marcadores interactivos((no obligatorio, en un futuro)). 
 
-Chat interno entre usuarios conectados 
+Sistema Premium (contacto visible y mayor visibilidad). 
 
-Validación de identidad universitaria 
+Panel de anuncios(( ------”panel_usuarios.html”, donde los usuarios premium pueden poner anuncios ilimitados, ya que, si no los anuncios solo duran una semana, y tienes 1 con el plan free)). 
 
-Estructura de BD 
-
-users(id, name, email, university, phone, instagram, is_premium, created_at) 
-rides(id, driver_id, schedule, days, status) 
-messages(id, sender_id, receiver_id, ride_id, content, timestamp) 
- 
+Mejoras de seguridad y verificación avanzada. 
 
  
 
-Fase 2: Funcionalidades Avanzadas (Semanas 4–6) 
-
-✅ Panel de Búsqueda Geolocalizada 
-
-Filtro por zona de residencia y horario. 
-
-Integración con Google Maps API para mostrar resultados cercanos.(no forma parte del prototipo base, pero puede ser una implementación a futuro, si puedes implementarlo hazlo, no lo dudes) 
-
-Cada marcador del mapa muestra datos del usuario (nombre, universidad, redes/WhatsApp si es público).(no forma parte del prototipo base, pero puede ser una implementación a futuro, si puedes implementarlo hazlo, no lo dudes) 
-
+DISEÑO DE INTERFAZ (UX / UI) 
+que sea :  mobile-first, o que se pueda adaptar a telefonos moviles, y que tambien se pueda adaptar a pcs las dos cosas. 
  
+((El trabajo que llevo por ahora es el panel principal [“index.html” ], donde esta la información de la web, además me gustaría que ahí estuviera también el panel de búsqueda de viajes[que es el archivo “panel_usuarios.html” ], y el panel de anuncios, para que la web no sea pasada de seguir y el usuario lo tenga nada más entrar.   
 
-✅ Chat Directo 
+Quiero que el estilo de la web sea interactivo y con animaciones,atrractivo para gente joven , basandote en webs o apps que jovenes ven como atractivas y "fiables" que se ven "populares", que use estilos inspirados en los de dora.ai que al escrolear y al interactuar con la pagina se muevan las cosas etc, en este caso usar un modelo que existe en dora.ia que haya como un coche en la web y se vaya miviendo mientras escroleas, el coche que sea en 3d y fullhd[si puedes claro].  
 
-Mensajería instantánea entre usuarios que coinciden en los filtros. 
-
-Notificaciones visuales en el panel. 
-
-Protección contra spam (máx. 10 chats activos). 
-
-✅ Premium Access 
-
-Solo usuarios premium (€2,50/mes) pueden mostrar contacto personal (Instagram/teléfono) en resultados del panel ilimitadamente. 
-
-Los demás solo acceden al chat interno para acordar viajes. 
-
- 
-
-Fase 3: Monetización y Anunciantes (Semanas 7–8) 
-
-✅ Panel de Anunciantes 
-
-Contacto con Empresas locales y publico banners segmentados por universidad o zona, en el respectivo apartado en la web. 
-
-Estadísticas de visualización y clics. 
-
-3. ANÁLISIS DE MERCADO Y COMPETENCIA (Fase de Análisis - SDLC) 
-
-Basado en el modelo de business case de Tilley 
-
-Tilley_SysAnalDes_13e_PPT_Ch02 
-
-Objetivo de negocio: 
-
-Reducir costes de transporte entre estudiantes y fomentar sostenibilidad y comunidad universitaria. 
-
-Análisis de la competencia (Madrid y España): 
-
-BlaBlaCar: generalista, no universitaria. No filtra por campus ni horarios académicos. 
-
-Amovens: orientado a empresas, menos social. 
-
-CompartirCoche.es: sin integración de chat ni mapas. 
- UniBeep se diferencia por su enfoque local, académico y social (vinculado a campus). 
-
-Análisis PESTEL resumido: 
-
-Político: impulso al transporte sostenible. 
-
-Económico: aumento de precios de transporte → alta demanda. 
-
-Social: cultura de movilidad compartida entre jóvenes. 
-
-Tecnológico: APIs de Google Maps, IA para matching. 
-
-Ecológico: reducción de emisiones. 
-
-Legal: cumplimiento de RGPD y verificación universitaria. 
-
- 
-
-4. DISEÑO DEL SISTEMA 
-
-Frontend: 
-
- 
-(El trabajo que llevo por ahora es el panel principal [“index.html” ], donde esta la información de la web, además me gustaría que ahí estuviera también el panel de búsqueda de viajes[que es el archivo “panel_usuarios.html” ], y el panel de anuncios, para que la web no sea pasada de seguir y el usuario lo tenga nada más entrar. 
- 
-Quiero que el estilo de la web sea interactivo y con animaciones, que use estilos inspirados en los de dora.ai que al escrolear y al interactuar con la pagina se muevan las cosas etc. 
-
-Por ahora los efectos y css y elementos html que he usado por ahora son extraidos de distintas páginas que ofrecen codigo fuente, como, por ejemplo https://freefrontend.com/, https://codepen.io/trending. De manera que basate en eso que llevo por ahora , pero si puedes hacer mejoras de animaciones etc no lo dudes) 
- 
- 
-
-Arquitectura Backend (Laravel) 
-
-app/ 
-├── Http/ 
-│   ├── Controllers/ 
-│   │   ├── UserController.php 
-│   │   ├── RideController.php 
-│   │   ├── MessageController.php 
-│   │   └── AdminController.php 
-├── Models/ 
-│   ├── User.php 
-│   ├── Ride.php 
-│   └── Message.php 
-routes/ 
-├── web.php 
-├── api.php 
   
 
-Seguridad 
+  
 
-Hash de contraseñas con bcrypt 
-
-Validación por correo  
-
-CSRF tokens y sanitización de inputs 
-
-Límite de mensajes/día 
-
-SSL y encriptación de datos sensibles 
-
+Por ahora los efectos y css y elementos html que he usado por ahora son extraidos de distintas páginas que ofrecen codigo fuente, como, por ejemplo https://freefrontend.com/, https://codepen.io/trending. De manera que basate en ese estilo que llevo por ahora , pero si puedes hacer mejoras de animaciones etc no lo dudes 
+ 
+tambien el panel principal ahora esta por defecto de manera que quiero que en la zona “funciones” pongas el acceso al “panel de usuarios”, que como sabes esto es el panel de viajes publicado por los usuarios , para que la aplicación sea mas fácil de acceder)) 
+ 
+Accesibilidad: cumplir con WCAG, contraste adecuado y navegación por teclado. 
  
 
-5. REQUISITOS FUNCIONALES Y NO FUNCIONALES (Cap. 4 - Tilley) 
+MODELO DE DATOS Y NORMALIZACIÓN 
+Diseño lógico (normalizado hasta 3NF): 
+Tabla users: id, name, email, password_hash, university_id, phone, instagram, is_premium, verified, created_at 
+Tabla rides: id, driver_id, origin_lat, origin_lng, origin_text, dest_lat, dest_lng, dest_text, schedule_time, days_bitmask, seats_available, status, created_at 
+Tabla ride_passengers: ride_id, user_id, status, joined_at 
+Tabla messages: id, sender_id, receiver_id, ride_id, content, created_at 
+Tabla payments: id, user_id, provider_tx, amount, start_date, end_date 
+Tabla ads: id, university_id, banner_url, target_zone, clicks, views 
 
-Tilley_SysAnalDes_13e_PPT_Ch04 
+Las relaciones están normalizadas y mantienen integridad referencial. 
 
-Funcionales: 
+MODELOS LÓGICOS Y DIAGRAMAS ((ESTO NO HACE FALTA QUE LO HAGAS SOLO ES PARTE DE LA PPROPUESTA TECNICA)) 
 
-Registro/Login con validación  
+DFD de nivel 0: actores principales (estudiantes, anunciantes, administrador) interactúan con el sistema UniBeep, enviando y recibiendo datos de registro, publicación, búsqueda, chat y pagos. 
 
-Filtro geográfico y horario (vinculado a mapas) para el panel de viajes 
+ERD: entidades users, universities, rides, ride_passengers, messages, payments y ads con relaciones uno a muchos y muchos a muchos. 
 
-Chat directo entre usuarios filtrados 
+UML (clases): User, Ride, Message, Payment, Ad, con métodos principales como publishRide(), searchRides(), sendMessage(), verifyUniversity(), chargeSubscription(). 
 
-Publicación de viajes y gestión de estado 
-
-Sistema de pago y suscripción premium 
-
-Panel de anuncios geolocalizado 
-
-No Funcionales: 
-
-Soporte para +50 usuarios concurrentes 
-
-Respuesta del sistema < 2 segundos 
-
-Interfaz responsive (mobile-first) 
-
-Seguridad RGPD y HTTPS obligatorio 
-
-Disponibilidad mínima 99.5% 
-
+ARQUITECTURA DEL SISTEMA 
+Modelo de tres capas: cliente, servidor de aplicación y base de datos. 
+Frontend: HTML5, CSS3, JavaScript ES6 y animaciones (GSAP o IntersectionObserver). 
+Backend:  (PHP PURO) CON (MCV) con API RESTful y autenticación mediante JWT(mejor este junto a cookies) o Sanctum. 
+Base de datos: MySQL. 
+ 
+Procesos asíncronos: colas para correos, verificación y notificaciones. 
+Despliegue: Docker, balanceador de carga y replicación de base de datos. 
  
 
-6. GESTIÓN DE PROYECTO (Cap. 3 - Tilley) 
+SEGURIDAD Y PRIVACIDAD 
 
-Tilley_SysAnalDes_13e_PPT_Ch03 
+Hash de contraseñas con bcrypt o argon2. 
 
-Metodología: Agile con enfoque RAD (Rapid Application Development) 
+Verificación de correo y numero de telefono. 
+Consentimiento explícito según RGPD y cifrado de datos sensibles. 
 
-Entregas semanales (iteraciones) 
+Límite de mensajes, rate limiting y captchas. 
 
-Prototipos validados con usuarios reales 
+Políticas de privacidad y logs de consentimiento. 
+Protegido ante intentos de inyecion sql , y otro tipo de ataques 
 
-Control visual con tablero Kanban 
+RECOMENDACIONES TÉCNICAS 
 
-Herramientas: Trello, GitHub, Figma, Notion 
+Usar index.html como landing principal con integración dinámica del panel de usuarios. 
 
-Cronograma estimado: 
+Implementar animación de coche 3D en formato glTF con three.js. 
 
-Fase 
+Activar lazy loading para recursos pesados. 
 
-Actividad 
-
-Duración 
-
-1 
-
-Diseño UX/UI y BD 
-
-1 semana 
-
-2 
-
-Desarrollo MVP 
-
-2 semanas 
-
-3 
-
-Filtros + Mapas + Chat 
-
-2 semanas 
-
-4 
-
-Premium + Ads 
-
-2 semanas 
-
-5 
-
-Pruebas y despliegue 
-
-1 semana 
-
- 
-
-7. BENEFICIOS ESPERADOS 
-
-Plataforma sin intermediarios, de estudiantes para estudiantes. 
-
-Promueve sostenibilidad y ahorro. 
-
-Potencial de monetización real con bajo coste operativo. 
-
-Escalable a universidades de toda España. 
+Implementar protección antispam y logs de auditoría. 
 
  
 
  
-
-TENER EN CUENTA: 
- 
-ESTO ES LA PROPUESTA TECNICA DEL PROYECTO QUE QUIERO QUE REALICES, DE NAERA QUE TE HE DEJADO ANOTACIONES ENTRE PARENTESIS Y EN CURSIVA, QUE ES DONDE ENFATICO EN COMO QUIERO QUE LO HAGAS EXACTAMENTE COMO MI DESAROYADOR QUE ERES 
