@@ -67,9 +67,11 @@ class AuthController {
             Response::error('Credenciales inválidas', 401);
         }
         
-        if (!$user['verified']) {
-            Response::error('Debes verificar tu email primero', 403);
-        }
+        // NOTA: Verificación de email deshabilitada para desarrollo
+        // En producción, habilitar esta validación después de configurar el servidor de email
+        // if (!$user['verified']) {
+        //     Response::error('Debes verificar tu email primero', 403);
+        // }
         
         // Generar JWT
         $payload = [

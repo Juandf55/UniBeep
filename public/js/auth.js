@@ -7,7 +7,8 @@ const Auth = {
     /**
      * Inicializar auth en la página
      */
-    init() {
+    async init() {
+        await API.auth.validateSession();
         this.updateUI();
         this.attachEventListeners();
     },

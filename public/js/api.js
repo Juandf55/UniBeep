@@ -55,10 +55,9 @@ const API = {
                 body: { email, password }
             });
             
-            // Guardar usuario en localStorage
+            // Guardar SOLO usuario en localStorage (JWT va en cookie HTTP-only)
             if (response.success && response.data.user) {
                 localStorage.setItem('user', JSON.stringify(response.data.user));
-                localStorage.setItem('token', response.data.token);
             }
             
             return response;
@@ -71,17 +70,40 @@ const API = {
             
             // Limpiar localStorage
             localStorage.removeItem('user');
-            localStorage.removeItem('token');
             
             return response;
         },
         
         async me() {
-            return API.request('/auth/me');
+            try {
+                const response = await API.request('/auth/me');
+                if (response.success && response.data) {
+                    localStorage.setItem('user', JSON.stringify(response.data));
+                }
+                return response;
+            } catch (error) {
+                localStorage.removeItem('user');
+                throw error;
+            }
         },
         
         isAuthenticated() {
             return !!localStorage.getItem('user');
+        },
+        
+        async validateSession() {
+            try {
+                const response = await API.request('/auth/me');
+                if (response.success && response.data) {
+                    localStorage.setItem('user', JSON.stringify(response.data));
+                    return true;
+                }
+                localStorage.removeItem('user');
+                return false;
+            } catch (error) {
+                localStorage.removeItem('user');
+                return false;
+            }
         },
         
         getUser() {

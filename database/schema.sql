@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS users (
     avatar_url VARCHAR(500),
     is_premium BOOLEAN DEFAULT FALSE,
     premium_until DATETIME NULL,
-    verified BOOLEAN DEFAULT FALSE,
+    verified BOOLEAN DEFAULT TRUE,  -- TRUE para desarrollo (cambiar a FALSE en producción con email configurado)
     verification_token VARCHAR(100),
     reset_token VARCHAR(100),
     reset_token_expiry DATETIME,
