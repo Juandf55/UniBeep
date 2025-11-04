@@ -58,6 +58,7 @@ Accesibilidad: cumplir con WCAG, contraste adecuado y navegación por teclado.
  
 
 MODELO DE DATOS Y NORMALIZACIÓN 
+Base de datos SQL, uso hedisql para visualizarla 
 Diseño lógico (normalizado hasta 3NF): 
 Tabla users: id, name, email, password_hash, university_id, phone, instagram, is_premium, verified, created_at 
 Tabla rides: id, driver_id, origin_lat, origin_lng, origin_text, dest_lat, dest_lng, dest_text, schedule_time, days_bitmask, seats_available, status, created_at 
