@@ -1030,6 +1030,8 @@
                     </li>
                 </ul>
             </div>
+            <button class="menu-toggle" id="menuToggle">☰</button>
+        </div>
     </nav>
 
     <!-- Home Section -->
@@ -1080,7 +1082,7 @@
         <li class="pace html">Geolocalización<blockquote class="quote html">Encuentra compañeros cercanos con Google Maps. Filtra por zona de residencia, campus universitario y horarios compatibles con tu rutina</blockquote></li>
         <li class="pace url">Premium<blockquote class="quote url">Funciones avanzadas: comparte Instagram/WhatsApp, visibilidad prioritaria en búsquedas y estadísticas detalladas de tus viajes compartidos</blockquote></li>
         <li class="pace http">Seguridad<blockquote class="quote http">Encriptación de datos, cumplimiento RGPD, validación de correo universitario y límites anti-spam para proteger a todos los usuarios</blockquote></li>
-        <li class="pace tcpip">Comunidad<blockquote class="quote tcpip">Red estudiantil comprometida con la sostenibilidad, el ahorro compartido y la reducción de la huella de carbono en los campus</blockquote></li>	
+        <li class="pace tcpip">Comunidad<blockquote class="quote tcpip">Red estudiantil comprometida con la sostenibilidad, el ahorro compartido y la reducción de la huella de carbono en los campus</blockquote></li> 
     </ol>
 
     <svg class="svg-container">
@@ -1250,23 +1252,25 @@
         const menuToggle = document.getElementById('menuToggle');
         const navLinksContainer = document.getElementById('navLinks');
 
-        menuToggle.addEventListener('click', () => {
-            navLinksContainer.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking on a link
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navLinksContainer.classList.remove('active');
+        if (menuToggle && navLinksContainer) {
+            menuToggle.addEventListener('click', () => {
+                navLinksContainer.classList.toggle('active');
             });
-        });
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!menuToggle.contains(e.target) && !navLinksContainer.contains(e.target)) {
-                navLinksContainer.classList.remove('active');
-            }
-        });
+            // Close mobile menu when clicking on a link
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinksContainer.classList.remove('active');
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!menuToggle.contains(e.target) && !navLinksContainer.contains(e.target)) {
+                    navLinksContainer.classList.remove('active');
+                }
+            });
+        }
     </script>
 </body>
 </html>
