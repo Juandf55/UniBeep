@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
-  <link rel="stylesheet" href="login.css">
+  <title>UniBeep - Login</title>
+  <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
 <div class="ring">
@@ -13,21 +13,114 @@
   <i style="--clr:#3205b1;"></i>
   <i style="--clr:#180ad6;"></i>
   <div class="login">
-    <h2>Login</h2>
-    <div class="inputBx">
-      <input type="text" placeholder="Username">
-    </div>
-    <div class="inputBx">
-      <input type="password" placeholder="Password">
-    </div>
-    <div class="inputBx">
-      <input type="submit" value="Sign in">
-    </div>
+    <h2 id="form-title">Login</h2>
+    
+    <!-- Formulario de Login -->
+    <form id="login-form" style="display: block;">
+      <div class="inputBx">
+        <input type="email" name="email" placeholder="Email Universitario" required>
+      </div>
+      <div class="inputBx">
+        <input type="password" name="password" placeholder="Contraseña" required>
+      </div>
+      <div class="inputBx">
+        <input type="submit" value="Iniciar Sesión">
+      </div>
+    </form>
+    
+    <!-- Formulario de Registro -->
+    <form id="register-form" style="display: none;">
+      <div class="inputBx">
+        <input type="text" name="name" placeholder="Nombre completo" required>
+      </div>
+      <div class="inputBx">
+        <input type="email" name="email" placeholder="Email Universitario (@upm.es, etc)" required>
+      </div>
+      <div class="inputBx">
+        <input type="tel" name="phone" placeholder="Teléfono (opcional)">
+      </div>
+      <div class="inputBx">
+        <input type="password" name="password" placeholder="Contraseña (mín. 8 caracteres)" required minlength="8">
+      </div>
+      <div class="inputBx">
+        <input type="submit" value="Registrarse">
+      </div>
+    </form>
+    
     <div class="links">
-      <a href="#">Forget Password</a>
-      <a href="#">Signup</a>
+      <a href="#" id="forgot-pass">Olvidé mi contraseña</a>
+      <a href="#" id="toggle-form">Registrarse</a>
     </div>
   </div>
 </div>
+
+<!-- Scripts -->
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+
+<script>
+  // Alternar entre login y registro
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+  const toggleLink = document.getElementById('toggle-form');
+  const formTitle = document.getElementById('form-title');
+  let showingLogin = true;
+  
+  toggleLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showingLogin = !showingLogin;
+    
+    if (showingLogin) {
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      formTitle.textContent = 'Login';
+      toggleLink.textContent = 'Registrarse';
+    } else {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+      formTitle.textContent = 'Registro';
+      toggleLink.textContent = 'Ya tengo cuenta';
+    }
+  });
+  
+  // Manejar login
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    
+    try {
+      await Auth.login(email, password);
+    } catch (error) {
+      console.error('Error en login:', error);
+    }
+  });
+  
+  // Manejar registro
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    const userData = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      phone: formData.get('phone') || null
+    };
+    
+    try {
+      await Auth.register(userData);
+    } catch (error) {
+      console.error('Error en registro:', error);
+    }
+  });
+  
+  // Forgot password (placeholder)
+  document.getElementById('forgot-pass').addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('Función de recuperación de contraseña en desarrollo');
+  });
+</script>
 </body>
 </html>

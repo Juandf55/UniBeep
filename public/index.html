@@ -1031,15 +1031,18 @@
                 </ul>
             </div>
             <button class="menu-toggle" id="menuToggle">☰</button>
+            <div class="user-menu" style="display: none;"></div>
         </div>
     </nav>
 
-    <!-- Home Section -->
+    <!-- Home Section con Coche 3D -->
     <section id="home" class="section">
-        <div>
+        <div style="position: relative; z-index: 2;">
             <h1>CampusRide</h1>
             <p class="section-info">Conecta con estudiantes para compartir coche. Ahorra dinero, cuida el planeta y haz nuevos amigos en cada trayecto universitario</p>
         </div>
+        <!-- Contenedor para el Coche 3D -->
+        <div id="car-3d-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;"></div>
     </section>
 
     <!-- About Section -->
@@ -1050,11 +1053,41 @@
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="section">
-        <div>
-            <h1>FUNCIONES</h1>
-            <p class="section-info">Búsqueda por zona y horario, mensajería instantánea, publicación de trayectos y filtros inteligentes para encontrar tu compañero de viaje ideal</p>
+    <!-- Services Section con Panel de Viajes -->
+    <section id="services" class="section" style="min-height: auto; padding: 80px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; width: 100%;">
+            <h1 style="text-align: center; margin-bottom: 20px;">FUNCIONES</h1>
+            <p class="section-info" style="margin-bottom: 50px;">Búsqueda por zona y horario, mensajería instantánea, publicación de trayectos y filtros inteligentes para encontrar tu compañero de viaje ideal</p>
+            
+            <!-- Panel de Búsqueda de Viajes -->
+            <div class="rides-search-panel">
+                <div class="search-filters">
+                    <h2>Buscar Viajes</h2>
+                    <div class="filters-grid">
+                        <input type="text" id="filter-origin" class="filter-input" placeholder="Origen (ej: Madrid)">
+                        <input type="text" id="filter-destination" class="filter-input" placeholder="Destino (ej: Campus Norte)">
+                        <input type="time" id="filter-time" class="filter-input">
+                        <select id="filter-day" class="filter-input">
+                            <option value="">Cualquier día</option>
+                            <option value="0">Lunes</option>
+                            <option value="1">Martes</option>
+                            <option value="2">Miércoles</option>
+                            <option value="3">Jueves</option>
+                            <option value="4">Viernes</option>
+                            <option value="5">Sábado</option>
+                            <option value="6">Domingo</option>
+                        </select>
+                    </div>
+                    <div class="filters-actions">
+                        <button id="search-rides-btn" class="btn-search">🔍 Buscar</button>
+                        <button id="clear-filters-btn" class="btn-clear">Limpiar</button>
+                    </div>
+                </div>
+                
+                <div id="rides-list" class="rides-list">
+                    <!-- Los viajes se cargarán aquí dinámicamente -->
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1272,5 +1305,299 @@
             });
         }
     </script>
+    
+    <!-- Three.js para animación 3D del coche -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP y ScrollTrigger (ya incluidos para otras animaciones) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Scripts de la aplicación -->
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/rides.js"></script>
+    <script src="/js/chat.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/car-animation.js"></script>
+    
+    <!-- Inicializar búsqueda de viajes -->
+    <script>
+        // Inicializar panel de viajes cuando la página cargue
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof Rides !== 'undefined') {
+                    Rides.init();
+                }
+            });
+        } else {
+            if (typeof Rides !== 'undefined') {
+                Rides.init();
+            }
+        }
+    </script>
+    
+    <!-- Estilos adicionales para el panel de viajes -->
+    <style>
+        .rides-search-panel {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid #333;
+        }
+        
+        .search-filters h2 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-input {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-input:focus {
+            outline: none;
+            border-color: #0040F1;
+            background: #333;
+        }
+        
+        .filters-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn-search, .btn-clear {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-search {
+            background: #0040F1;
+            color: white;
+        }
+        
+        .btn-search:hover {
+            background: #0050FF;
+            transform: translateY(-2px);
+        }
+        
+        .btn-clear {
+            background: #444;
+            color: white;
+        }
+        
+        .btn-clear:hover {
+            background: #555;
+        }
+        
+        .rides-list {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .public-ride-card {
+            background: #2a2a2a;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+        }
+        
+        .public-ride-card:hover {
+            transform: translateY(-5px);
+            border-color: #0040F1;
+            box-shadow: 0 10px 30px rgba(0, 64, 241, 0.3);
+        }
+        
+        .premium-ride {
+            border: 2px solid #FFD700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 64, 241, 0.1));
+        }
+        
+        .ride-driver {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .driver-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .driver-info {
+            flex: 1;
+        }
+        
+        .driver-name {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .premium-mini {
+            font-size: 0.9rem;
+            margin-left: 5px;
+        }
+        
+        .driver-contact {
+            color: #0040F1;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .ride-route-public {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 64, 241, 0.1);
+            border-radius: 10px;
+        }
+        
+        .route-point {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .route-point .icon {
+            font-size: 1.2rem;
+        }
+        
+        .route-point .text {
+            color: white;
+            font-size: 0.95rem;
+        }
+        
+        .route-arrow {
+            color: #0040F1;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .ride-details-public {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .ride-details-public .detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        .ride-description-public {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        .ride-actions-public {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-join-ride, .btn-message, .btn-login-required {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-join-ride {
+            background: #0040F1;
+            color: white;
+        }
+        
+        .btn-join-ride:hover {
+            background: #0050FF;
+            transform: translateY(-2px);
+        }
+        
+        .btn-message {
+            background: #444;
+            color: white;
+        }
+        
+        .btn-message:hover {
+            background: #555;
+        }
+        
+        .btn-login-required {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .loading-rides, .empty-state, .error {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-hint {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rides-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-actions {
+                flex-direction: column;
+            }
+            
+            .btn-search, .btn-clear {
+                width: 100%;
+            }
+        }
+    </style>
 </body>
 </html>
